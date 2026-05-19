@@ -41,6 +41,13 @@ const columns = [
     type: 'id',
   },
   {
+    key: 'distinct_id',
+    label: 'Distinct ID',
+    hint: 'distinct_id PostHog — thường là email hoặc user_id thật của user (đã identify). Giúp nhận biết "user này là ai" thay vì UUID nội bộ. Click icon ⧉ để copy.',
+    width: 240,
+    type: 'distinct',
+  },
+  {
     key: 'total_steps',
     label: 'Tổng bước',
     hint: 'Tổng số event PostHog mà user đã trigger trong khoảng thời gian truy vấn (đã loại các event hệ thống bắt đầu bằng $, mcp_, posthog_, Application, Deep link). Mỗi pageview / click / scroll = 1 bước.',
@@ -375,6 +382,18 @@ async function copyId(id) {
                     >↗</a>
                   </div>
                 </template>
+                <template v-else-if="col.type === 'distinct'">
+                  <span class="upt-distinct" :title="row[col.key] || ''">
+                    {{ row[col.key] || '—' }}
+                  </span>
+                  <div class="upt-id-actions" v-if="row[col.key]">
+                    <span
+                      class="upt-link"
+                      title="Copy distinct_id"
+                      @click.stop="copyId(row[col.key])"
+                    >{{ copiedId === row[col.key] ? '✓' : '⧉' }}</span>
+                  </div>
+                </template>
                 <template v-else-if="col.type === 'journey'">
                   <button
                     class="upt-action-btn"
@@ -572,6 +591,13 @@ async function copyId(id) {
   color: #312e81;
 }
 .upt-td--focused { background: #eef2ff; }
+.upt-distinct {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: #111827;
+  overflow: hidden; text-overflow: ellipsis;
+  flex: 1; min-width: 0;
+}
 .upt-id-actions {
   display: flex; align-items: center; gap: 6px;
   opacity: 0; transition: opacity 0.12s;

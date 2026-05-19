@@ -1508,6 +1508,10 @@ function endDragPopover() {
 }
 function handleDocClick(e) {
   if (!popover.value.visible) return;
+  // Modal con (Chi tiết user / Phân tích) đang mở → bỏ qua check click-outside.
+  // Target có thể là filter button / select native nằm ngoài popoverRef nhưng vẫn
+  // thuộc context của popover. Modal tự đóng qua @click.self backdrop + nút ×.
+  if (showUserDetailModal.value || showAnalysisModal.value) return;
   if (popoverRef.value && popoverRef.value.contains(e.target)) return;
   closePopover();
 }
