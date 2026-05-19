@@ -164,7 +164,8 @@ const copiedAll = ref(false);
 
 // Map event_props_raw → object { eventName: [propsObj, ...] }
 // PostHog trả tuple [eventName, propertiesJsonString].
-// Cũng support trường hợp properties đã là object (tuỳ version PostHog API).
+// Properties có thể bị double-encoded (toJSONString + JSON response wrap),
+// nên parse loop tới khi ra object thật (max 3 lần phòng infinite loop).
 function buildUserEventProps(rawList) {
   const out = {};
   if (!Array.isArray(rawList)) return out;
@@ -173,7 +174,7 @@ function buildUserEventProps(rawList) {
     const [eventName, rawProps] = tuple;
     if (!eventName) return;
     let props = rawProps;
-    if (typeof props === "string") {
+    for (let i = 0; i < 3 && typeof props === "string"; i++) {
       try {
         props = JSON.parse(props);
       } catch {
@@ -871,6 +872,8 @@ const STRING_FORCED_KEYS = new Set([
 ]);
 
 // ---- Properties stats cho node được pin (dynamic theo event) ----
+// Trả về { records, stats, recordCount, reason? }
+// `reason` được set khi không có stats để render → UI show message tương ứng.
 const nodePropertiesStats = computed(() => {
   if (!popover.value.visible) return null;
   const { name: eventName, userIds } = popover.value;
@@ -884,7 +887,9 @@ const nodePropertiesStats = computed(() => {
     if (!list) return;
     records.push(list[0]);
   });
-  if (records.length === 0) return null;
+  if (records.length === 0) {
+    return { records: [], stats: [], recordCount: 0, reason: "no-records" };
+  }
 
   // Discover keys (loại key bị ẩn)
   const keysSet = new Set();
@@ -894,7 +899,9 @@ const nodePropertiesStats = computed(() => {
       keysSet.add(k);
     });
   });
-  if (keysSet.size === 0) return null;
+  if (keysSet.size === 0) {
+    return { records, stats: [], recordCount: records.length, reason: "no-keys" };
+  }
 
   const stats = Array.from(keysSet)
     .map((key) => {
@@ -1948,7 +1955,21 @@ watch(hiddenEvents, () => {
                 user có data)</span
               >
             </div>
-            <div class="upc-pop-props-grid">
+            <div
+              v-if="nodePropertiesStats.stats.length === 0"
+              class="upc-pop-props-empty"
+            >
+              <template v-if="nodePropertiesStats.reason === 'no-records'">
+                Event này không có custom properties được track. PostHog chỉ ghi
+                các thuộc tính hệ thống ($browser, $session_id…) — không có chỉ
+                số để tổng hợp.
+              </template>
+              <template v-else-if="nodePropertiesStats.reason === 'no-keys'">
+                Tất cả properties của event này nằm trong danh sách ẩn (token /
+                error_*). Chưa có chỉ số public để tổng hợp.
+              </template>
+            </div>
+            <div v-else class="upc-pop-props-grid">
               <div
                 v-for="s in nodePropertiesStats.stats"
                 :key="s.key"
@@ -3187,6 +3208,15 @@ watch(hiddenEvents, () => {
   text-transform: none;
   letter-spacing: 0;
   margin-left: 4px;
+}
+.upc-pop-props-empty {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  border-radius: 5px;
 }
 .upc-pop-props-grid {
   display: grid;
