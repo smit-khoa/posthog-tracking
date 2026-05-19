@@ -289,8 +289,21 @@ async function copyId(id) {
         <div class="upt-spinner"></div>
         <div class="upt-loading-text">Đang tải bảng…</div>
       </div>
+      <!-- Empty state cho table -->
+      <div
+        v-else-if="sortedRows.length === 0"
+        class="upt-empty-state"
+      >
+        <div class="upt-empty-illu">🗒️</div>
+        <div class="upt-empty-title">Không có record nào</div>
+        <div class="upt-empty-desc">
+          Query đã chạy nhưng không trả về user nào trong khoảng thời gian +
+          môi trường + limit hiện tại. Thử mở rộng range hoặc đổi env trên
+          thanh công cụ.
+        </div>
+      </div>
       <!-- Scroll ngang chung cho header + body (header sticky top) -->
-      <div class="upt-scroll-x">
+      <div v-else class="upt-scroll-x">
         <!-- Header row (sticky) -->
         <div class="upt-thead" :style="{ width: totalWidth + 'px' }">
           <div
@@ -504,6 +517,25 @@ async function copyId(id) {
   z-index: 5;
 }
 .upt-loading-text { font-size: 12px; color: #4338ca; font-weight: 500; }
+
+.upt-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 40px 24px;
+}
+.upt-empty-illu { font-size: 48px; line-height: 1; }
+.upt-empty-title { font-size: 15px; font-weight: 600; color: #111827; }
+.upt-empty-desc {
+  font-size: 13px;
+  color: #6b7280;
+  max-width: 460px;
+  line-height: 1.55;
+}
 .upt-spinner {
   width: 26px; height: 26px;
   border: 3px solid #e0e7ff;

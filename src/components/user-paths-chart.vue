@@ -1084,15 +1084,24 @@ function hideTooltip() {
 }
 
 // ---- Popover ----
+// Vị trí mặc định: pin sát góc phải-trên viewport (user vẫn có thể kéo đi sau).
+const POPOVER_PAD = 16;
+const POPOVER_EST_WIDTH = 420; // ước lượng trước khi DOM render xong
+function defaultPopoverPos() {
+  return {
+    x: Math.max(POPOVER_PAD, window.innerWidth - POPOVER_EST_WIDTH - POPOVER_PAD),
+    y: POPOVER_PAD,
+  };
+}
 function openPopover(node, e) {
   e.stopPropagation();
   hideTooltip();
-  // Đặt popover ngay cạnh vị trí click
+  const { x, y } = defaultPopoverPos();
   popover.value = {
     visible: true,
     showList: true,
-    x: e.clientX,
-    y: e.clientY,
+    x,
+    y,
     stepIdx: node.stepIdx,
     name: node.name,
     userIds: node.userIds || [],
@@ -1101,33 +1110,28 @@ function openPopover(node, e) {
   copiedId.value = null;
   copiedAll.value = false;
   hoveredUserId.value = null;
-  // Reposition sau khi DOM render — nếu tràn cạnh phải/dưới thì lùi lại
+  // Sau khi DOM render → đo width thực, căn lại sát phải nếu khác estimate
   nextTick(() => {
     const el = popoverRef.value;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const pad = 12;
-    let nx = popover.value.x;
-    let ny = popover.value.y;
-    if (rect.right > window.innerWidth - pad) {
-      nx = Math.max(pad, window.innerWidth - rect.width - pad);
+    popover.value.x = Math.max(POPOVER_PAD, window.innerWidth - rect.width - POPOVER_PAD);
+    // Clamp height nếu popover cao hơn viewport
+    if (rect.height + POPOVER_PAD * 2 > window.innerHeight) {
+      popover.value.y = POPOVER_PAD;
     }
-    if (rect.bottom > window.innerHeight - pad) {
-      ny = Math.max(pad, window.innerHeight - rect.height - pad);
-    }
-    popover.value.x = nx;
-    popover.value.y = ny;
   });
 }
 
 // Pin highlight nhưng KHÔNG hiển thị popover UI — dùng cho click vào bar
 function pinHighlight(node, e) {
   e.stopPropagation();
+  const { x, y } = defaultPopoverPos();
   popover.value = {
     visible: true,
     showList: false,
-    x: e.clientX,
-    y: e.clientY,
+    x,
+    y,
     stepIdx: node.stepIdx,
     name: node.name,
     userIds: node.userIds || [],
@@ -1754,7 +1758,54 @@ watch(hiddenEvents, () => {
         <div class="upc-spinner"></div>
         <div class="upc-loading-text">Đang tải dữ liệu từ PostHog…</div>
       </div>
+      <!-- Empty state: không có user nào sau khi parse + filter -->
+      <div
+        v-if="!props.loading && layout.nodes.length === 0"
+        class="upc-empty-state"
+      >
+        <div class="upc-empty-illu">📭</div>
+        <div class="upc-empty-title">
+          {{ props.rawData.length === 0
+            ? "Chưa có dữ liệu user"
+            : "Không có luồng nào để vẽ" }}
+        </div>
+        <div class="upc-empty-desc">
+          <template v-if="props.rawData.length === 0">
+            Query không trả về record nào. Thử mở rộng khoảng thời gian, đổi
+            môi trường (Production / Dev), hoặc tăng <b>Limit</b>.
+          </template>
+          <template v-else-if="endStepName">
+            Không user nào có chạm tới End step
+            <code>{{ endStepName }}</code> trong khoảng thời gian này.
+          </template>
+          <template v-else-if="hiddenEvents.size > 0">
+            Tất cả event đã bị ẩn qua bộ lọc tuỳ chỉnh. Bỏ ẩn bớt event để
+            xem flow.
+          </template>
+          <template v-else>
+            {{ props.rawData.length }} record có data nhưng không có chuỗi
+            event nào đủ dài để dựng flow.
+          </template>
+        </div>
+        <div class="upc-empty-actions">
+          <button
+            v-if="endStepName"
+            class="upc-empty-btn"
+            @click="clearEndStep"
+          >
+            Bỏ End step
+          </button>
+          <button
+            v-if="hiddenEvents.size > 0"
+            class="upc-empty-btn"
+            @click="showAllEvents"
+          >
+            Hiện lại tất cả event
+          </button>
+        </div>
+      </div>
       <svg
+        v-if="layout.nodes.length > 0"
         :width="layout.totalW"
         :height="layout.totalH"
         :viewBox="`0 0 ${layout.totalW} ${layout.totalH}`"
@@ -2877,6 +2928,60 @@ watch(hiddenEvents, () => {
   background: #fafbfc;
   position: relative;
   min-height: 200px;
+}
+.upc-empty-state {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+  gap: 10px;
+}
+.upc-empty-illu {
+  font-size: 56px;
+  line-height: 1;
+  filter: grayscale(0.2);
+}
+.upc-empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+.upc-empty-desc {
+  font-size: 13px;
+  color: #6b7280;
+  max-width: 480px;
+  line-height: 1.55;
+}
+.upc-empty-desc code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: #f3f4f6;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #4338ca;
+}
+.upc-empty-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.upc-empty-btn {
+  padding: 6px 14px;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #4338ca;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.upc-empty-btn:hover {
+  background: #c7d2fe;
 }
 .upc-chart-wrap--loading svg {
   opacity: 0.3;
