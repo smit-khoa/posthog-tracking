@@ -34,6 +34,14 @@ function replayListUrl(distinctId) {
 //  - width, align, type
 const columns = [
   {
+    key: '__index',
+    label: '#',
+    hint: 'Số thứ tự dòng theo thứ tự sort hiện tại (không phải id user). Click cột khác để đổi sort sẽ làm STT thay đổi tương ứng.',
+    width: 60,
+    type: 'index',
+    align: 'right',
+  },
+  {
     key: 'person_id',
     label: 'Mã user',
     hint: 'PostHog person_id (UUID nội bộ). Click vào để focus luồng của user này trong chart bên trên. Các icon: ⧉ copy, ▶ replay session mới nhất, 📜 danh sách recordings, ↗ trang person trên PostHog.',
@@ -276,7 +284,13 @@ async function copyId(id) {
 <template>
   <div class="upt-root">
     <div class="upt-header">
-      <div class="upt-title">Dashboard · {{ sortedRows.length.toLocaleString('en-US') }} records</div>
+      <div class="upt-title">
+        Dashboard ·
+        <b>{{ sortedRows.length.toLocaleString('en-US') }}</b>
+        <span class="upt-title-sub">
+          / {{ props.rawData.length.toLocaleString('en-US') }} records
+        </span>
+      </div>
       <div class="upt-hint">Click vào id user để xem luồng riêng · Click cột để sort</div>
     </div>
 
@@ -310,9 +324,12 @@ async function copyId(id) {
             v-for="col in columns"
             :key="col.key"
             class="upt-th"
-            :class="{ 'upt-th--num': col.align === 'right' }"
+            :class="{
+              'upt-th--num': col.align === 'right',
+              'upt-th--nosort': col.type === 'index',
+            }"
             :style="{ width: col.width + 'px' }"
-            @click="toggleSort(col.key)"
+            @click="col.type !== 'index' && toggleSort(col.key)"
           >
             <span>{{ col.label }}</span>
             <span
@@ -351,7 +368,10 @@ async function copyId(id) {
                 }"
                 :style="{ width: col.width + 'px' }"
               >
-                <template v-if="col.type === 'id'">
+                <template v-if="col.type === 'index'">
+                  <span class="upt-index">{{ (index + 1).toLocaleString('en-US') }}</span>
+                </template>
+                <template v-else-if="col.type === 'id'">
                   <span
                     class="upt-id"
                     :class="{ 'upt-id--focused': row[col.key] === props.focusedUserId }"
@@ -492,7 +512,18 @@ async function copyId(id) {
   padding: 14px 24px 8px;
 }
 .upt-title { font-size: 14px; font-weight: 600; color: #111827; }
+.upt-title b { color: #4338ca; }
+.upt-title-sub { font-weight: 400; color: #6b7280; margin-left: 2px; }
 .upt-hint { font-size: 12px; color: #6b7280; }
+
+.upt-index {
+  font-variant-numeric: tabular-nums;
+  color: #9ca3af;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.upt-th--nosort { cursor: default; }
+.upt-th--nosort:hover { background: #f9fafb; }
 
 .upt-table-wrap {
   margin: 0 24px 24px;

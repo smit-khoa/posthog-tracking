@@ -2,8 +2,10 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import UserPathsChart from './components/user-paths-chart.vue'
 import UserPathsTable from './components/user-paths-table.vue'
+import WhaleUsersAlert from './components/whale-users-alert.vue'
 import { sampleRawData, defaultQuery } from './sample-data.js'
 import { usePosthogQuery } from './composables/use-posthog-query.js'
+import { extractWhales } from './composables/extract-whales.js'
 import {
   TIME_RANGES, DEFAULT_RANGE_KEY, applyRangeToQuery,
   ENV_OPTIONS, DEFAULT_ENV_KEY,
@@ -58,6 +60,10 @@ const chartData = computed(() => {
 
 // Khi data refresh → reset focus (id cũ có thể không còn)
 watch(rawData, () => { clearFocus() })
+
+// "Khách sộp": user có spend_range='>100' hoặc total_spend > 50 tỉ.
+// Logic parse properties nằm trong composable extract-whales.js để giữ App.vue gọn.
+const whaleUsers = computed(() => extractWhales(rawData.value))
 const showQueryEditor = ref(false)
 const copied = ref(false)
 
@@ -259,6 +265,8 @@ function handleFileImport(e) {
     </div>
 
     <div v-if="error" class="error-banner">{{ error }}</div>
+
+    <WhaleUsersAlert :whales="whaleUsers" @focus-user="focusUser" />
 
     <div v-if="focusedUserId" class="focus-banner">
       <span class="focus-icon">👤</span>

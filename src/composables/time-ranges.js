@@ -59,13 +59,15 @@ export const CUSTOM_RANGE_KEY = 'custom'
 
 export const DEFAULT_RANGE_KEY = 'last_14_days'
 
-// Format Date → 'YYYY-MM-DD HH:MM:SS' (local time, không có TZ — match ClickHouse DateTime)
+// Format Date → 'YYYY-MM-DD HH:MM:SS' theo UTC.
+// PostHog ClickHouse lưu `timestamp` ở UTC; string trong WHERE cũng được parse là UTC.
+// Nếu format ở local time (UTC+7) thì filter sẽ lệch 7 tiếng so với data thực tế.
 export function formatPosthogTimestamp(d) {
   if (!d) return ''
   const pad = (n) => String(n).padStart(2, '0')
   return (
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ` +
-    `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+    `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
+    `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`
   )
 }
 
@@ -81,10 +83,10 @@ export function resolveRange(key, now = new Date()) {
 
 // ---- Env filter theo host ----
 // PostHog auto-capture `properties.$host`. Logic:
-//   prod  → chỉ giữ host = PROD_HOST
-//   dev   → loại trừ host = PROD_HOST (mọi host còn lại = localhost, staging, IP…)
+//   prod  → host kết thúc bằng PROD_HOST_SUFFIX (cover agency.smit.vn, dashboard.smit.vn, …)
+//   dev   → host KHÔNG kết thúc bằng PROD_HOST_SUFFIX (localhost, staging, IP…)
 //   all   → không filter
-export const PROD_HOST = 'agency.smit.vn'
+export const PROD_HOST_SUFFIX = '.vn'
 
 export const ENV_OPTIONS = [
   { key: 'all', label: '🌐 All envs' },
@@ -99,8 +101,8 @@ export const LIMIT_OPTIONS = [100, 200, 500, 1000, 2000]
 export const DEFAULT_LIMIT = 100
 
 function buildEnvFilter(envKey) {
-  if (envKey === 'prod') return `AND properties.$host = '${PROD_HOST}'`
-  if (envKey === 'dev') return `AND properties.$host != '${PROD_HOST}'`
+  if (envKey === 'prod') return `AND properties.$host LIKE '%${PROD_HOST_SUFFIX}'`
+  if (envKey === 'dev') return `AND properties.$host NOT LIKE '%${PROD_HOST_SUFFIX}'`
   return '' // all
 }
 
