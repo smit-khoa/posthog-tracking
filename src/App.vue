@@ -327,9 +327,9 @@ function handleFileImport(e) {
 .btn:hover:not(:disabled) { background: #f9fafb; border-color: #9ca3af; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-primary {
-  background: #6366f1; color: #fff; border-color: #6366f1;
+  background: #1d4aff; color: #fff; border-color: #1d4aff;
 }
-.btn-primary:hover:not(:disabled) { background: #4f46e5; border-color: #4f46e5; }
+.btn-primary:hover:not(:disabled) { background: #1843e6; border-color: #1843e6; }
 .btn-success { background: #ecfdf5; border-color: #10b981; color: #065f46; }
 .btn-danger {
   color: #991b1b; border-color: #fecaca;
@@ -408,18 +408,18 @@ function handleFileImport(e) {
   color: #6b7280;
 }
 .legend-swatch {
-  width: 12px; height: 12px; border-radius: 2px; background: #6366f1;
+  width: 12px; height: 12px; border-radius: 2px; background: #1d4aff;
 }
 
 .focus-banner {
   display: flex; align-items: center; gap: 8px;
   margin: 12px 24px 0;
   padding: 10px 14px;
-  background: #eef2ff;
-  border: 1px solid #c7d2fe;
+  background: #eaf0ff;
+  border: 1px solid #b8c8ff;
   border-radius: 8px;
   font-size: 13px;
-  color: #312e81;
+  color: #0b2697;
   flex-wrap: wrap;
 }
 .focus-icon { font-size: 16px; }
@@ -427,28 +427,28 @@ function handleFileImport(e) {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
   background: #fff;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #b8c8ff;
   padding: 2px 6px;
   border-radius: 4px;
-  color: #4338ca;
+  color: #1437c4;
 }
 .focus-clear {
   margin-left: auto;
   padding: 4px 10px;
   background: #fff;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #b8c8ff;
   border-radius: 6px;
   font-size: 12px;
-  color: #4338ca;
+  color: #1437c4;
   cursor: pointer;
 }
-.focus-clear:hover { background: #c7d2fe; }
+.focus-clear:hover { background: #b8c8ff; }
 
 .loading-bar {
   position: absolute;
   left: 0; right: 0; top: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent 0%, #6366f1 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, #1d4aff 50%, transparent 100%);
   background-size: 30% 100%;
   background-repeat: no-repeat;
   animation: loading-slide 1.2s linear infinite;

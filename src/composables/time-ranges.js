@@ -97,7 +97,7 @@ export const ENV_OPTIONS = [
 export const DEFAULT_ENV_KEY = 'prod'
 
 // Limit options cho dropdown
-export const LIMIT_OPTIONS = [100, 200, 500, 1000, 2000]
+export const LIMIT_OPTIONS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000]
 export const DEFAULT_LIMIT = 100
 
 function buildEnvFilter(envKey) {

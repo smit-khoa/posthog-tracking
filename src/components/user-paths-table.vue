@@ -512,7 +512,7 @@ async function copyId(id) {
   padding: 14px 24px 8px;
 }
 .upt-title { font-size: 14px; font-weight: 600; color: #111827; }
-.upt-title b { color: #4338ca; }
+.upt-title b { color: #1437c4; }
 .upt-title-sub { font-weight: 400; color: #6b7280; margin-left: 2px; }
 .upt-hint { font-size: 12px; color: #6b7280; }
 
@@ -547,7 +547,7 @@ async function copyId(id) {
   backdrop-filter: blur(2px);
   z-index: 5;
 }
-.upt-loading-text { font-size: 12px; color: #4338ca; font-weight: 500; }
+.upt-loading-text { font-size: 12px; color: #1437c4; font-weight: 500; }
 
 .upt-empty-state {
   flex: 1;
@@ -569,8 +569,8 @@ async function copyId(id) {
 }
 .upt-spinner {
   width: 26px; height: 26px;
-  border: 3px solid #e0e7ff;
-  border-top-color: #6366f1;
+  border: 3px solid #d6e1ff;
+  border-top-color: #1d4aff;
   border-radius: 50%;
   animation: upt-spin 0.7s linear infinite;
 }
@@ -604,7 +604,7 @@ async function copyId(id) {
 .upt-th:last-child { border-right: none; }
 .upt-th:hover { background: #f3f4f6; }
 .upt-th--num { justify-content: flex-end; text-align: right; }
-.upt-sort { color: #6366f1; font-size: 10px; }
+.upt-sort { color: #1d4aff; font-size: 10px; }
 .upt-th-hint {
   color: #9ca3af;
   font-size: 12px;
@@ -612,7 +612,7 @@ async function copyId(id) {
   user-select: none;
   transition: color 0.12s;
 }
-.upt-th-hint:hover { color: #4338ca; }
+.upt-th-hint:hover { color: #1437c4; }
 
 .upt-body {
   overflow-x: hidden;
@@ -643,7 +643,7 @@ async function copyId(id) {
 .upt-id {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
-  color: #4338ca;
+  color: #1437c4;
   cursor: pointer;
   overflow: hidden; text-overflow: ellipsis;
   flex: 1; min-width: 0;
@@ -651,9 +651,9 @@ async function copyId(id) {
 .upt-id:hover { text-decoration: underline; }
 .upt-id--focused {
   font-weight: 700;
-  color: #312e81;
+  color: #0b2697;
 }
-.upt-td--focused { background: #eef2ff; }
+.upt-td--focused { background: #eaf0ff; }
 .upt-distinct {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
@@ -667,10 +667,10 @@ async function copyId(id) {
   flex-shrink: 0;
 }
 .upt-link {
-  color: #6366f1; text-decoration: none;
+  color: #1d4aff; text-decoration: none;
   font-size: 12px;
 }
-.upt-link:hover { color: #4f46e5; }
+.upt-link:hover { color: #1843e6; }
 .upt-copy {
   color: #6b7280;
   font-size: 12px;
@@ -681,17 +681,17 @@ async function copyId(id) {
 .upt-action-btn {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 8px;
-  border: 1px solid #c7d2fe;
-  background: #eef2ff;
+  border: 1px solid #b8c8ff;
+  background: #eaf0ff;
   border-radius: 4px;
   font-size: 11px;
-  color: #4338ca;
+  color: #1437c4;
   cursor: pointer;
   text-decoration: none;
   font-family: inherit;
 }
 .upt-action-btn:hover:not(:disabled) {
-  background: #c7d2fe;
+  background: #b8c8ff;
 }
 .upt-action-btn:disabled {
   background: #f3f4f6;
@@ -775,8 +775,8 @@ async function copyId(id) {
 .upt-journey-num {
   width: 28px; height: 28px;
   border-radius: 50%;
-  background: #eef2ff;
-  color: #4338ca;
+  background: #eaf0ff;
+  color: #1437c4;
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 700;
   flex-shrink: 0;

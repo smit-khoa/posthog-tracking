@@ -900,7 +900,12 @@ const nodePropertiesStats = computed(() => {
     });
   });
   if (keysSet.size === 0) {
-    return { records, stats: [], recordCount: records.length, reason: "no-keys" };
+    return {
+      records,
+      stats: [],
+      recordCount: records.length,
+      reason: "no-keys",
+    };
   }
 
   const stats = Array.from(keysSet)
@@ -1089,7 +1094,10 @@ const POPOVER_PAD = 16;
 const POPOVER_EST_WIDTH = 420; // ước lượng trước khi DOM render xong
 function defaultPopoverPos() {
   return {
-    x: Math.max(POPOVER_PAD, window.innerWidth - POPOVER_EST_WIDTH - POPOVER_PAD),
+    x: Math.max(
+      POPOVER_PAD,
+      window.innerWidth - POPOVER_EST_WIDTH - POPOVER_PAD,
+    ),
     y: POPOVER_PAD,
   };
 }
@@ -1115,7 +1123,10 @@ function openPopover(node, e) {
     const el = popoverRef.value;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    popover.value.x = Math.max(POPOVER_PAD, window.innerWidth - rect.width - POPOVER_PAD);
+    popover.value.x = Math.max(
+      POPOVER_PAD,
+      window.innerWidth - rect.width - POPOVER_PAD,
+    );
     // Clamp height nếu popover cao hơn viewport
     if (rect.height + POPOVER_PAD * 2 > window.innerHeight) {
       popover.value.y = POPOVER_PAD;
@@ -1394,7 +1405,7 @@ const userDetailTable = computed(() => {
 
 // Palette cho donut "User đến từ" — vòng lặp 8 màu rồi quay lại
 const PREV_PALETTE = [
-  "#6366f1",
+  "#1d4aff",
   "#10b981",
   "#f59e0b",
   "#ec4899",
@@ -1765,26 +1776,28 @@ watch(hiddenEvents, () => {
       >
         <div class="upc-empty-illu">📭</div>
         <div class="upc-empty-title">
-          {{ props.rawData.length === 0
-            ? "Chưa có dữ liệu user"
-            : "Không có luồng nào để vẽ" }}
+          {{
+            props.rawData.length === 0
+              ? "Chưa có dữ liệu user"
+              : "Không có luồng nào để vẽ"
+          }}
         </div>
         <div class="upc-empty-desc">
           <template v-if="props.rawData.length === 0">
-            Query không trả về record nào. Thử mở rộng khoảng thời gian, đổi
-            môi trường (Production / Dev), hoặc tăng <b>Limit</b>.
+            Query không trả về record nào. Thử mở rộng khoảng thời gian, đổi môi
+            trường (Production / Dev), hoặc tăng <b>Limit</b>.
           </template>
           <template v-else-if="endStepName">
             Không user nào có chạm tới End step
             <code>{{ endStepName }}</code> trong khoảng thời gian này.
           </template>
           <template v-else-if="hiddenEvents.size > 0">
-            Tất cả event đã bị ẩn qua bộ lọc tuỳ chỉnh. Bỏ ẩn bớt event để
-            xem flow.
+            Tất cả event đã bị ẩn qua bộ lọc tuỳ chỉnh. Bỏ ẩn bớt event để xem
+            flow.
           </template>
           <template v-else>
-            {{ props.rawData.length }} record có data nhưng không có chuỗi
-            event nào đủ dài để dựng flow.
+            {{ props.rawData.length }} record có data nhưng không có chuỗi event
+            nào đủ dài để dựng flow.
           </template>
         </div>
         <div class="upc-empty-actions">
@@ -2605,8 +2618,8 @@ watch(hiddenEvents, () => {
 .upc-pinned-tag {
   font-size: 11px;
   font-weight: 600;
-  color: #4338ca;
-  background: #eef2ff;
+  color: #1437c4;
+  background: #eaf0ff;
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -2629,7 +2642,7 @@ watch(hiddenEvents, () => {
   border-color: #9ca3af;
 }
 .upc-customize-badge {
-  background: #6366f1;
+  background: #1d4aff;
   color: #fff;
   font-size: 11px;
   font-weight: 600;
@@ -2661,7 +2674,7 @@ watch(hiddenEvents, () => {
 }
 .upc-customize-search:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #1d4aff;
 }
 .upc-customize-action {
   padding: 5px 10px;
@@ -2710,7 +2723,7 @@ watch(hiddenEvents, () => {
 }
 .upc-presets-select:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #1d4aff;
 }
 .upc-presets-info {
   margin-left: auto;
@@ -2779,10 +2792,10 @@ watch(hiddenEvents, () => {
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: linear-gradient(90deg, #eef2ff 0%, #f5f3ff 100%);
-  border-bottom: 1px solid #c7d2fe;
+  background: linear-gradient(90deg, #eaf0ff 0%, #f5f3ff 100%);
+  border-bottom: 1px solid #b8c8ff;
   font-size: 13px;
-  color: #312e81;
+  color: #0b2697;
   flex-wrap: wrap;
 }
 .upc-endstep-icon {
@@ -2794,10 +2807,10 @@ watch(hiddenEvents, () => {
 .upc-endstep-name {
   font-weight: 700;
   background: #fff;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #b8c8ff;
   padding: 2px 8px;
   border-radius: 4px;
-  color: #4338ca;
+  color: #1437c4;
 }
 .upc-endstep-hint {
   font-size: 11px;
@@ -2807,14 +2820,14 @@ watch(hiddenEvents, () => {
   margin-left: auto;
   padding: 4px 10px;
   background: #fff;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #b8c8ff;
   border-radius: 6px;
   font-size: 12px;
-  color: #4338ca;
+  color: #1437c4;
   cursor: pointer;
 }
 .upc-endstep-clear:hover {
-  background: #e0e7ff;
+  background: #d6e1ff;
 }
 
 /* Banner phân tích nhanh */
@@ -2961,7 +2974,7 @@ watch(hiddenEvents, () => {
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 12px;
-  color: #4338ca;
+  color: #1437c4;
 }
 .upc-empty-actions {
   display: flex;
@@ -2972,16 +2985,16 @@ watch(hiddenEvents, () => {
 }
 .upc-empty-btn {
   padding: 6px 14px;
-  border: 1px solid #c7d2fe;
-  background: #eef2ff;
-  color: #4338ca;
+  border: 1px solid #b8c8ff;
+  background: #eaf0ff;
+  color: #1437c4;
   border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
   font-family: inherit;
 }
 .upc-empty-btn:hover {
-  background: #c7d2fe;
+  background: #b8c8ff;
 }
 .upc-chart-wrap--loading svg {
   opacity: 0.3;
@@ -3002,14 +3015,14 @@ watch(hiddenEvents, () => {
 }
 .upc-loading-text {
   font-size: 13px;
-  color: #4338ca;
+  color: #1437c4;
   font-weight: 500;
 }
 .upc-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid #e0e7ff;
-  border-top-color: #6366f1;
+  border: 3px solid #d6e1ff;
+  border-top-color: #1d4aff;
   border-radius: 50%;
   animation: upc-spin 0.7s linear infinite;
 }
@@ -3027,7 +3040,7 @@ watch(hiddenEvents, () => {
 /* Skeleton cho banner phân tích nhanh khi loading */
 .upc-analysis-banner--loading {
   background: linear-gradient(135deg, #fffbeb 0%, #f5f3ff 100%);
-  border-bottom-color: #e0e7ff;
+  border-bottom-color: #d6e1ff;
 }
 .upc-analysis-banner-title--muted {
   color: #6b7280;
@@ -3066,14 +3079,14 @@ watch(hiddenEvents, () => {
   }
 }
 .upc-bar {
-  fill: #6366f1;
+  fill: #1d4aff;
   cursor: pointer;
   transition:
     fill 0.15s,
     opacity 0.15s;
 }
 .upc-bar--active {
-  fill: #4338ca;
+  fill: #1437c4;
 }
 .upc-bar--upstream {
   fill: #818cf8;
@@ -3084,7 +3097,7 @@ watch(hiddenEvents, () => {
 }
 
 .upc-link {
-  fill: #6366f1;
+  fill: #1d4aff;
   fill-opacity: 0.25;
   transition:
     fill-opacity 0.15s,
@@ -3094,7 +3107,7 @@ watch(hiddenEvents, () => {
   fill-opacity: 0.55;
 }
 .upc-link--active {
-  fill: #4338ca;
+  fill: #1437c4;
   fill-opacity: 0.65;
 }
 .upc-link--upstream {
@@ -3121,21 +3134,21 @@ watch(hiddenEvents, () => {
     fill 0.12s;
 }
 .upc-card:hover .upc-card-bg {
-  stroke: #6366f1;
+  stroke: #1d4aff;
   stroke-width: 1.5;
 }
 .upc-card--active .upc-card-bg {
-  stroke: #4338ca;
+  stroke: #1437c4;
   stroke-width: 2;
-  fill: #eef2ff;
+  fill: #eaf0ff;
 }
 .upc-card--upstream .upc-card-bg {
-  stroke: #c7d2fe;
+  stroke: #b8c8ff;
   stroke-width: 1.5;
   fill: #f5f3ff;
 }
 .upc-card-bg--active {
-  stroke: #4f46e5;
+  stroke: #1843e6;
   stroke-width: 2;
 }
 .upc-step-badge {
@@ -3364,7 +3377,7 @@ watch(hiddenEvents, () => {
 .upc-pop-prop-value {
   font-size: 14px;
   font-weight: 700;
-  color: #4338ca;
+  color: #1437c4;
   font-variant-numeric: tabular-nums;
 }
 .upc-pop-prop-row {
@@ -3395,7 +3408,7 @@ watch(hiddenEvents, () => {
   top: 0;
   left: 0;
   bottom: 0;
-  background: #eef2ff;
+  background: #eaf0ff;
   z-index: 0;
 }
 .upc-pop-prop-dist-val {
@@ -3414,7 +3427,7 @@ watch(hiddenEvents, () => {
   flex-shrink: 0;
   margin-left: 6px;
   font-size: 10.5px;
-  color: #4338ca;
+  color: #1437c4;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -3462,13 +3475,13 @@ watch(hiddenEvents, () => {
   background: linear-gradient(135deg, #fef3c7 0%, #fee2e2 100%);
 }
 .upc-pop-action-btn--active {
-  border-color: #6366f1;
-  background: #eef2ff;
-  color: #4338ca;
+  border-color: #1d4aff;
+  background: #eaf0ff;
+  color: #1437c4;
 }
 .upc-pop-action-btn--active:hover {
-  border-color: #4f46e5;
-  background: #e0e7ff;
+  border-color: #1843e6;
+  background: #d6e1ff;
 }
 
 /* Modal Phân tích nhanh */
@@ -3526,7 +3539,7 @@ watch(hiddenEvents, () => {
 /* User detail modal — rộng hơn để chứa bảng */
 .upc-user-detail-modal {
   max-width: 1100px;
-  min-height: 200px;
+  min-height: 300px;
 }
 .upc-user-detail-table-wrap {
   overflow: auto;
@@ -3555,7 +3568,7 @@ watch(hiddenEvents, () => {
   background: #f3f4f6;
 }
 .upc-udt-sort {
-  color: #6366f1;
+  color: #1d4aff;
   font-size: 10px;
   margin-left: 4px;
 }
@@ -3584,7 +3597,7 @@ watch(hiddenEvents, () => {
 .upc-udt-id {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11px;
-  color: #4338ca;
+  color: #1437c4;
   max-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3627,15 +3640,15 @@ watch(hiddenEvents, () => {
 }
 .upc-udt-filter-add {
   padding: 4px 10px;
-  border: 1px dashed #6366f1;
+  border: 1px dashed #1d4aff;
   background: #fff;
-  color: #4338ca;
+  color: #1437c4;
   border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
 }
 .upc-udt-filter-add:hover {
-  background: #eef2ff;
+  background: #eaf0ff;
 }
 .upc-udt-filter-clear {
   padding: 4px 10px;
@@ -3683,7 +3696,7 @@ watch(hiddenEvents, () => {
 .upc-udt-filter-op:focus,
 .upc-udt-filter-input:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #1d4aff;
 }
 .upc-udt-filter-remove {
   width: 26px;
@@ -3850,14 +3863,14 @@ watch(hiddenEvents, () => {
     box-shadow 0.12s;
 }
 .upc-pop-prev-row--active {
-  border-color: #4338ca;
+  border-color: #1437c4;
   box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.18);
 }
 .upc-pop-prev-row--active .upc-pop-prev-bar {
-  background: #c7d2fe;
+  background: #b8c8ff;
 }
 .upc-pop-prev-row--active .upc-pop-prev-name {
-  color: #4338ca;
+  color: #1437c4;
   font-weight: 600;
 }
 .upc-pop-prev-bar {
@@ -3865,7 +3878,7 @@ watch(hiddenEvents, () => {
   top: 0;
   left: 0;
   bottom: 0;
-  background: #eef2ff;
+  background: #eaf0ff;
   z-index: 0;
 }
 .upc-pop-prev-name {
@@ -3882,7 +3895,7 @@ watch(hiddenEvents, () => {
   position: relative;
   z-index: 1;
   font-size: 11px;
-  color: #4338ca;
+  color: #1437c4;
   font-weight: 600;
   flex-shrink: 0;
   margin-left: 8px;
@@ -3943,8 +3956,8 @@ watch(hiddenEvents, () => {
   background: #f9fafb;
 }
 .upc-pop-legend-row--active {
-  background: #eef2ff;
-  border-color: #c7d2fe;
+  background: #eaf0ff;
+  border-color: #b8c8ff;
 }
 .upc-pop-legend-dot {
   width: 10px;
@@ -3962,7 +3975,7 @@ watch(hiddenEvents, () => {
 .upc-pop-legend-num {
   font-size: 10.5px;
   font-weight: 600;
-  color: #4338ca;
+  color: #1437c4;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
@@ -3982,7 +3995,7 @@ watch(hiddenEvents, () => {
 }
 .upc-pop-search:focus {
   outline: none;
-  border-color: #6366f1;
+  border-color: #1d4aff;
 }
 .upc-pop-btn {
   padding: 5px 10px;
@@ -4044,13 +4057,13 @@ watch(hiddenEvents, () => {
 }
 .upc-pop-link {
   font-size: 11px;
-  color: #6366f1;
+  color: #1d4aff;
   text-decoration: none;
   cursor: pointer;
 }
 .upc-pop-link:hover {
   text-decoration: underline;
-  color: #4f46e5;
+  color: #1843e6;
 }
 .upc-pop-copy {
   font-size: 11px;
@@ -4058,7 +4071,7 @@ watch(hiddenEvents, () => {
   cursor: pointer;
 }
 .upc-pop-copy:hover {
-  color: #4f46e5;
+  color: #1843e6;
 }
 .upc-pop-copy--ok {
   color: #059669 !important;
